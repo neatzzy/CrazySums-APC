@@ -8,8 +8,9 @@
 #define CLEAR "clear"
 #endif
 
+#define MAX 100
+
 FILE *fd;
-FILE *fb;
 
 typedef struct{
     char nick[21];
@@ -17,6 +18,8 @@ typedef struct{
 }DadosPlayer;
 
 DadosPlayer player[1];
+
+DadosPlayer players[MAX];
 
 int dificuldade = 1, fase = 0, terminou = 0;
 
@@ -26,9 +29,19 @@ void telaInicial(DadosPlayer player[]);
 
 int menu();
 
+int compare(const void *a, const void *b);
+
 void mudarDificuldade();
 
 void zerarRanking();
+
+void carregaRanking();
+
+void atualizarPontuacao();
+
+void salvaRanking();
+
+void adicionarRanking();
 
 void configuracoes();
 
@@ -55,6 +68,14 @@ int main(){
     return 0;
 }
 
+int compare(const void *a, const void *b) {
+    DadosPlayer *playerA = (DadosPlayer *)a;
+    DadosPlayer *playerB = (DadosPlayer *)b;
+
+    if (playerA->pts > playerB->pts) return -1;
+    if (playerA->pts < playerB->pts) return 1;
+    return strcmp(playerA->nick, playerB->nick);
+}
 
 int menu(){
     int op;
@@ -84,7 +105,7 @@ int menu(){
                clearScreen();
                 break;
             case 4:
-               // ranking();
+                carregaRanking();
                 break;
             case 5:
                 return 0;
@@ -160,10 +181,11 @@ void zerarRanking(){
     getchar();
 
     if(op == 'S' || op == 's'){
-        FILE *arq;
         char file[] = "ranking.bin";
-        arq = fopen(file, "wb");
-        fclose(arq);
+        FILE * fb = fopen(file, "wb");
+        int qtd = 0;
+        fwrite(&qtd, sizeof(int), 1, fb);
+        fclose(fb);
         printf("Ranking zerado com sucesso!\n");
         system("pause");
     }
@@ -215,7 +237,7 @@ void telaInicial(DadosPlayer player[]){
     printf("Bem vindo(a) ao Crazy Sums!\n\n\n");
     printf("Digite seu nick(max 20 caracteres): ");
     scanf("%s", player[0].nick);
-    player[0].pts = 0;
+    atualizarPontuacao();
 }
 
 void instrucoes(){
@@ -391,6 +413,7 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             clearScreen();
             printf("Parabens! Voce completou a fase %d!\n", fase + 1);
             player[0].pts += 50;
+            adicionarRanking();
             fase++;
         }
         else{
@@ -568,6 +591,7 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             clearScreen();
             printf("Parabens! Voce completou a fase %d!\n", fase + 1);
             player[0].pts += 100;
+            adicionarRanking();
             fase++;
         }
         else{
@@ -749,6 +773,7 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             clearScreen();
             printf("Parabens! Voce completou a fase %d!\n", fase + 1);
             player[0].pts += 200;
+            adicionarRanking();
             fase++;
         }
         else{
@@ -796,4 +821,101 @@ void jogar(){
     }
 
     return;
+}
+
+void adicionarRanking(){
+    FILE *rankingFile = fopen("ranking.bin", "r+");
+    if (rankingFile == NULL) {
+        rankingFile = fopen("ranking.bin", "w+");
+        int numPlayers = 0;
+        fwrite(&numPlayers, sizeof(int), 1, rankingFile);
+    }
+
+    int numPlayers;
+    fseek(rankingFile, 0, SEEK_SET);
+    fread(&numPlayers, sizeof(int), 1, rankingFile);
+
+    DadosPlayer currentPlayer = player[0];
+    int found = 0;
+
+    for (int i = 0; i < numPlayers; i++) {
+        DadosPlayer tempPlayer;
+        fread(&tempPlayer, sizeof(DadosPlayer), 1, rankingFile);
+        if (strcmp(tempPlayer.nick, currentPlayer.nick) == 0) {
+            tempPlayer.pts = currentPlayer.pts;
+            fseek(rankingFile, sizeof(int) + i * sizeof(DadosPlayer), SEEK_SET);
+            fwrite(&tempPlayer, sizeof(DadosPlayer), 1, rankingFile);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        numPlayers++;
+        fseek(rankingFile, 0, SEEK_SET);
+        fwrite(&numPlayers, sizeof(int), 1, rankingFile);
+        fseek(rankingFile, 0, SEEK_END);
+        fwrite(&currentPlayer, sizeof(DadosPlayer), 1, rankingFile);
+    }
+
+    fclose(rankingFile);
+}
+
+void atualizarPontuacao(){
+    FILE *rankingFile = fopen("ranking.bin", "r");
+    if (rankingFile != NULL) {
+        int numPlayers;
+        fread(&numPlayers, sizeof(int), 1, rankingFile);
+
+        for (int i = 0; i < numPlayers; i++) {
+            DadosPlayer tempPlayer;
+            fread(&tempPlayer, sizeof(DadosPlayer), 1, rankingFile);
+            if (strcmp(tempPlayer.nick, player[0].nick) == 0) {
+                player[0].pts = tempPlayer.pts;
+                break;
+            }
+        }
+
+        fclose(rankingFile);
+    } else {
+        player[0].pts = 0;
+    }
+}
+
+void carregaRanking(){
+    FILE *rankingFile = fopen("ranking.bin", "r");
+    int numPlayers;
+    if (rankingFile != NULL) {
+        fread(&numPlayers, sizeof(int), 1, rankingFile);
+
+        if (numPlayers == 0) {
+            clearScreen();
+            printf("Jogue uma partida antes de ver o ranking\n");
+            return;
+        }
+
+        DadosPlayer players[MAX];
+        fseek(rankingFile, sizeof(int), SEEK_SET);
+        for (int i = 0; i < numPlayers ; i++) {
+            fread(&players[i], sizeof(DadosPlayer), 1, rankingFile);
+        }
+
+        qsort(players, numPlayers, sizeof(DadosPlayer), compare);
+
+        printf("\n### RANKING ###\n");
+        for (int i = 0; i < numPlayers; i++) {
+            printf("%d. %s - %d pontos\n", i + 1, players[i].nick, players[i].pts);
+        }
+        printf("\n");
+    }
+    else{
+        clearScreen();
+        printf("Jogue uma partida antes de ver o ranking\n");
+        return;
+    }	
+
+    fclose(rankingFile);
+
+    system("pause");
+    clearScreen();
 }
