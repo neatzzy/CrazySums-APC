@@ -425,6 +425,7 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
                 fase = 0;
                 printf("\nPressione <<enter>> para continuar...\n");
                 getchar();
+                clearScreen();
                 return;
             }
         }
@@ -604,6 +605,7 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
                 fase = 0;
                 printf("\nPressione <<enter>> para continuar...\n");
                 getchar();
+                clearScreen();
                 return;
             }
         }
@@ -785,6 +787,7 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
                 terminou = 1;
                 printf("\nPressione <<enter>> para continuar...\n");
                 getchar();
+                clearScreen();
                 return;
             }
         }
