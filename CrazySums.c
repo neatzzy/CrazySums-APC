@@ -187,11 +187,13 @@ void zerarRanking(){
         fwrite(&qtd, sizeof(int), 1, fb);
         fclose(fb);
         printf("Ranking zerado com sucesso!\n");
-        system("pause");
+        printf("\nPressione <<enter>> para continuar...\n");
+        getchar();
     }
     else{
         printf("Operacao cancelada!\n");
-        system("pause");
+        printf("\nPressione <<enter>> para continuar...\n");
+        getchar();
     }
 }
 
@@ -254,7 +256,8 @@ void instrucoes(){
     printf("Ha 4 fases por nivel de dificuldade, e o jogador deve completar todas as fases para avancar de nivel.\n");
     printf("O jogo acaba quando o jogador erra 5 vezes por fase.\n\n");
     printf("Boa sorte!\n\n");
-    system("pause");
+    printf("\nPressione <<enter>> para continuar...\n");
+    getchar();
 }
 
 void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
@@ -415,23 +418,24 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             player[0].pts += 50;
             adicionarRanking();
             fase++;
+            if(fase == 4){
+                printf("Parabens! Voce completou o nivel Iniciante!\n");
+                printf("Tente o nivel Intermediario!\n");
+                dificuldade++;
+                fase = 0;
+                printf("\nPressione <<enter>> para continuar...\n");
+                getchar();
+                return;
+            }
         }
         else{
             clearScreen();
             printf("Voce perdeu! Tente novamente!\n");
         }
-        system("pause");
+        printf("\nPressione <<enter>> para continuar...\n");
+        getchar();
         clearScreen();
         return;
-    
-
-    if(fase == 4){
-        printf("Parabens! Voce completou o nivel Iniciante!\n");
-        printf("Tente o nivel Intermediario!\n");
-        dificuldade++;
-        system("pause");
-    }
-    return;
 }
 
 void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
@@ -593,24 +597,24 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             player[0].pts += 100;
             adicionarRanking();
             fase++;
+            if(fase == 4){
+                printf("Parabens! Voce completou o nivel Intermediario!\n");
+                printf("Tente o nivel Avancado!\n");
+                dificuldade++;
+                fase = 0;
+                printf("\nPressione <<enter>> para continuar...\n");
+                getchar();
+                return;
+            }
         }
         else{
             clearScreen();
             printf("Voce perdeu! Tente novamente!\n");
         }
-        system("pause");
+        printf("\nPressione <<enter>> para continuar...\n");
+        getchar();
         clearScreen();
         return;
-    
-
-    if(fase == 4){
-        printf("Parabens! Voce completou o nivel Intermediario!\n");
-        printf("Tente o nivel Avancado!\n");
-        dificuldade++;
-        system("pause");
-    }
-
-    return;
 }
 
 void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
@@ -775,23 +779,24 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             player[0].pts += 200;
             adicionarRanking();
             fase++;
+            if(fase == 4){
+                printf("Parabens! Voce completou o nivel Avancado!\n");
+                printf("Voltando para o menu principal!\n");
+                terminou = 1;
+                printf("\nPressione <<enter>> para continuar...\n");
+                getchar();
+                return;
+            }
         }
         else{
             clearScreen();
             printf("Voce perdeu! Tente novamente!\n");
         }
-        system("pause");
+        printf("\nPressione <<enter>> para continuar...\n");
+        getchar();
         clearScreen();
         return;
     
-    if(fase == 4){
-        printf("Parabens! Voce completou o nivel Avancado!\n");
-        printf("Voltando para o menu principal!\n");
-        terminou = 1;
-        system("pause");
-    }
-
-    return;
 }
 
 void jogar(){
@@ -916,6 +921,7 @@ void carregaRanking(){
 
     fclose(rankingFile);
 
-    system("pause");
+    printf("\nPressione <<enter>> para continuar...\n");
+    getchar();
     clearScreen();
 }
