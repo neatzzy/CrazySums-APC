@@ -2,7 +2,7 @@
 
 This project was developed as part of the APC (Algorithms and Computer Programming) course. It is a terminal-based game written in C, inspired by the classic Number Sums game.
 
-##About the Game
+## About the Game
 In this game, players are challenged to solve number-based puzzles by combining numbers to reach a target sum. The objective is to improve mathematical and problem-solving skills through progressively difficult levels.
 
 ## Features
