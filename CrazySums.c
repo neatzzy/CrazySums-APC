@@ -369,7 +369,7 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             }
             else if(matriz[linha][coluna][1] == 0){
                 matriz[linha][coluna][0] = 0;
-                matriz[linha][coluna][1] = 2;
+                matriz[linha][coluna][1] = 2; 
                 clearScreen();
                 printf("Numero eliminado com sucesso!\n\n");
             }
@@ -563,10 +563,10 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             }
 
             for(int i = 0; i < 6; i++){
-                if((matriz[i][0][1] * matriz[i][1][1] * matriz[i][2][1] * matriz[i][3][1] != 0) && (somaLinha[i] != 0)){
+                if((matriz[i][0][1] * matriz[i][1][1] * matriz[i][2][1] * matriz[i][3][1] * matriz[i][4][1] * matriz[i][5][1] != 0) && (somaLinha[i] != 0)){
                     somaLinha[i] = -1;
                 }
-                if((matriz[0][i][1] * matriz[1][i][1] * matriz[2][i][1] * matriz[3][i][1] != 0) && (somaColuna[i] != 0)){
+                if((matriz[0][i][1] * matriz[1][i][1] * matriz[2][i][1] * matriz[3][i][1] * matriz[4][i][1] * matriz[5][i][1] != 0) && (somaColuna[i] != 0)){
                     somaColuna[i] = -1;
                 }
                 if(somaColuna[i] == -1){
