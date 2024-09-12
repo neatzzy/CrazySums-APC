@@ -264,7 +264,7 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
 
     char inputMatriz[5], inputSoma[9];
 
-    fd = fopen("../iniciante.txt", "r");
+    fd = fopen("iniciante.txt", "r");
 
     
         int vidas = 5;
@@ -443,7 +443,7 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
 
     char inputMatriz[7], inputSoma[13];
 
-    fd = fopen("../intermediario.txt", "r");
+    fd = fopen("intermediario.txt", "r");
 
     
         int vidas = 5;
@@ -623,7 +623,7 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
 
     char inputMatriz[8], inputSoma[15];
 
-    fd = fopen("../avancado.txt", "r");
+    fd = fopen("avancado.txt", "r");
 
     
         int vidas = 5;
