@@ -23,8 +23,6 @@ DadosPlayer players[MAX];
 
 int dificuldade = 1, fase = 0, terminou = 0;
 
-void clearScreen();
-
 void telaInicial(DadosPlayer player[]);
 
 int menu();
@@ -55,6 +53,8 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]);
 
 void jogar();
 
+void systemPause();
+
 int main(){
 
     int loop = 1;
@@ -80,7 +80,7 @@ int compare(const void *a, const void *b) {
 int menu(){
     int op;
 
-    clearScreen();
+    system(CLEAR);
 
     do{
     printf("### Crazy Sums ###\n\n");
@@ -102,7 +102,7 @@ int menu(){
                 break;
             case 3:
                instrucoes();
-               clearScreen();
+               system(CLEAR);
                 break;
             case 4:
                 carregaRanking();
@@ -111,7 +111,7 @@ int menu(){
                 return 0;
                 break;
             default:
-                clearScreen();
+                system(CLEAR);
                 printf("Opcao invalida!\n");
                 break;
         }
@@ -123,7 +123,7 @@ int menu(){
 void mudarDificuldade(){
     int op;
 
-    clearScreen();
+    system(CLEAR);
     
     while(op != 4){
     printf("### MUDAR DIFICULDADE ###\n\n");
@@ -152,22 +152,22 @@ void mudarDificuldade(){
         case 1:
             dificuldade = 1;
             fase = 0;
-            clearScreen();
+            system(CLEAR);
             break;
         case 2:
             dificuldade = 2;
             fase = 0;
-            clearScreen();
+            system(CLEAR);
             break;
         case 3:
             dificuldade = 3;
             fase = 0;
-            clearScreen();
+            system(CLEAR);
             break;
         case 4:
             break;
         default:
-            clearScreen();
+            system(CLEAR);
             printf("Opcao invalida!\n");
             break;
         }
@@ -200,7 +200,7 @@ void zerarRanking(){
 void configuracoes(){
     int op;
 
-    clearScreen();
+    system(CLEAR);
 
     while(op != 3){
         printf("### CONFIGURACOES ###\n\n");
@@ -214,25 +214,21 @@ void configuracoes(){
         switch (op){
             case 1:
                 zerarRanking();
-                clearScreen();
+                system(CLEAR);
                 break;
             case 2:
                 mudarDificuldade();
-                clearScreen();
+                system(CLEAR);
                 break;
             case 3:
-                clearScreen();
+                system(CLEAR);
                 break;
             default:
-                clearScreen();
+                system(CLEAR);
                 printf("Opcao invalida!\n");
                 break;
         }
     }
-}
-
-void clearScreen(){
-    system(CLEAR);
 }
 
 void telaInicial(DadosPlayer player[]){
@@ -243,7 +239,7 @@ void telaInicial(DadosPlayer player[]){
 }
 
 void instrucoes(){
-    clearScreen();
+    system(CLEAR);
     printf("### INSTRUCOES ###\n\n");
     printf("O jogo consiste em eliminar numeros em uma matriz.\n");
     printf("Em cada nivel eh apresentada uma matriz, onde a frente de cada linha e coluna\n");
@@ -255,9 +251,8 @@ void instrucoes(){
     printf("Iniciante - 50 pontos\nIntermediario - 100 pontos\nAvancado - 200 pontos\n");
     printf("Ha 4 fases por nivel de dificuldade, e o jogador deve completar todas as fases para avancar de nivel.\n");
     printf("O jogo acaba quando o jogador erra 5 vezes por fase.\n\n");
-    printf("Boa sorte!\n\n");
-    printf("\nPressione <<enter>> para continuar...\n");
-    getchar();
+    printf("Boa sorte!\n");
+    systemPause();
 }
 
 void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
@@ -356,31 +351,33 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             linha--; coluna--;
 
             if(linha < 0 || linha > 3 || coluna < 0 || coluna > 3){
-                clearScreen();
-                printf("Posicao invalida!\n\n");
+                printf("\nPosicao invalida!\n");
+                systemPause();
                 continue;
             }
 
             if(matriz[linha][coluna][1] == 1){
                 matriz[linha][coluna][1] = 3;
                 vidas--;
-                clearScreen();
-                printf("Voce errou!\n\n");
+                printf("\nVoce errou!\n");
+                systemPause();
+                continue;
             }
             else if(matriz[linha][coluna][1] == 0){
                 matriz[linha][coluna][0] = 0;
                 matriz[linha][coluna][1] = 2; 
-                clearScreen();
-                printf("Numero eliminado com sucesso!\n\n");
+                printf("\nNumero eliminado com sucesso!\n");
             }
             else if(matriz[linha][coluna][1] == 2){
-                clearScreen();
-                printf("Numero ja eliminado!\n\n");
+                printf("\nNumero ja eliminado!\n");
+                systemPause();
+                continue;
 
             }
             else{
-                clearScreen();
-                printf("Voce ja tentou esse numero!\n\n");
+                printf("\nVoce ja tentou esse numero!\n");
+                systemPause();
+                continue;
             }
 
             for(int i = 0; i < 4; i++){
@@ -411,9 +408,10 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             if(flag != 0){
                 break;
             }
+            systemPause();
         }
         if(vidas > 0){
-            clearScreen();
+            system(CLEAR);
             printf("Parabens! Voce completou a fase %d!\n", fase + 1);
             player[0].pts += 50;
             adicionarRanking();
@@ -423,19 +421,15 @@ void jogarIniciante(int matriz[][7][2], int somaLinha[], int somaColuna[]){
                 printf("Tente o nivel Intermediario!\n");
                 dificuldade++;
                 fase = 0;
-                printf("\nPressione <<enter>> para continuar...\n");
-                getchar();
-                clearScreen();
+                systemPause();
                 return;
             }
         }
         else{
-            clearScreen();
+            system(CLEAR);
             printf("Voce perdeu! Tente novamente!\n");
         }
-        printf("\nPressione <<enter>> para continuar...\n");
-        getchar();
-        clearScreen();
+        systemPause();
         return;
 }
 
@@ -535,31 +529,33 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             linha--; coluna--;
 
             if(linha < 0 || linha > 5 || coluna < 0 || coluna > 5){
-                clearScreen();
-                printf("Posicao invalida!\n\n");
+                printf("\nPosicao invalida!\n");
+                systemPause();
                 continue;
             }
 
             if(matriz[linha][coluna][1] == 1){
                 matriz[linha][coluna][1] = 3;
                 vidas--;
-                clearScreen();
-                printf("Voce errou!\n\n");
+                printf("\nVoce errou!\n");
+                systemPause();
+                continue;
             }
             else if(matriz[linha][coluna][1] == 0){
                 matriz[linha][coluna][0] = 0;
                 matriz[linha][coluna][1] = 2;
-                clearScreen();
-                printf("Numero eliminado com sucesso!\n\n");
+                printf("\nNumero eliminado com sucesso!\n");
             }
             else if(matriz[linha][coluna][1] == 2){
-                clearScreen();
-                printf("Numero ja eliminado!\n\n");
+                printf("\nNumero ja eliminado!\n");
+                systemPause();
+                continue;
 
             }
             else{
-                clearScreen();
                 printf("Voce ja tentou esse numero!\n\n");
+                systemPause();
+                continue;
             }
 
             for(int i = 0; i < 6; i++){
@@ -590,10 +586,11 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             if(flag != 0){
                 break;
             }
+            systemPause();
         }
         
         if(vidas > 0){
-            clearScreen();
+            system(CLEAR);
             printf("Parabens! Voce completou a fase %d!\n", fase + 1);
             player[0].pts += 100;
             adicionarRanking();
@@ -603,19 +600,15 @@ void jogarIntermediario(int matriz[][7][2], int somaLinha[], int somaColuna[]){
                 printf("Tente o nivel Avancado!\n");
                 dificuldade++;
                 fase = 0;
-                printf("\nPressione <<enter>> para continuar...\n");
-                getchar();
-                clearScreen();
+                systemPause();
                 return;
             }
         }
         else{
-            clearScreen();
+            system(CLEAR);
             printf("Voce perdeu! Tente novamente!\n");
         }
-        printf("\nPressione <<enter>> para continuar...\n");
-        getchar();
-        clearScreen();
+        systemPause();
         return;
 }
 
@@ -716,31 +709,33 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             linha--; coluna--;
 
             if(linha < 0 || linha > 6 || coluna < 0 || coluna > 6){
-                clearScreen();
-                printf("Posicao invalida!\n\n");
+                printf("\nPosicao invalida!\n");
+                systemPause();
                 continue;
             }
 
             if(matriz[linha][coluna][1] == 1){
                 matriz[linha][coluna][1] = 3;
                 vidas--;
-                clearScreen();
-                printf("Voce errou!\n\n");
+                printf("\nVoce errou!\n");
+                systemPause();
+                continue;
             }
             else if(matriz[linha][coluna][1] == 0){
                 matriz[linha][coluna][0] = 0;
                 matriz[linha][coluna][1] = 2;
-                clearScreen();
-                printf("Numero eliminado com sucesso!\n\n");
+                printf("\nNumero eliminado com sucesso!\n");
             }
             else if(matriz[linha][coluna][1] == 2){
-                clearScreen();
-                printf("Numero ja eliminado!\n\n");
+                printf("\nNumero ja eliminado!\n");
+                systemPause();
+                continue;
 
             }
             else{
-                clearScreen();
-                printf("Voce ja tentou esse numero!\n\n");
+                printf("\nVoce ja tentou esse numero!\n");
+                systemPause();
+                continue;
             }
 
             for(int i = 0; i < 7; i++){
@@ -771,12 +766,13 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
             if(flag != 0){
                 break;
             }
+            systemPause();
         }
 
         
         
         if(vidas > 0){
-            clearScreen();
+            system(CLEAR);
             printf("Parabens! Voce completou a fase %d!\n", fase + 1);
             player[0].pts += 200;
             adicionarRanking();
@@ -785,25 +781,21 @@ void jogarAvancado(int matriz[][7][2], int somaLinha[], int somaColuna[]){
                 printf("Parabens! Voce completou o nivel Avancado!\n");
                 printf("Voltando para o menu principal!\n");
                 terminou = 1;
-                printf("\nPressione <<enter>> para continuar...\n");
-                getchar();
-                clearScreen();
+                systemPause();
                 return;
             }
         }
         else{
-            clearScreen();
+            system(CLEAR);
             printf("Voce perdeu! Tente novamente!\n");
         }
-        printf("\nPressione <<enter>> para continuar...\n");
-        getchar();
-        clearScreen();
+        systemPause();
         return;
     
 }
 
 void jogar(){
-    clearScreen();
+    system(CLEAR);
 
     int matriz[7][7][2];
     int somaLinha[7], somaColuna[7];
@@ -897,8 +889,8 @@ void carregaRanking(){
         fread(&numPlayers, sizeof(int), 1, rankingFile);
 
         if (numPlayers == 0) {
-            clearScreen();
-            printf("Jogue uma partida antes de ver o ranking\n");
+            printf("\nJogue uma partida antes de ver o ranking\n");
+            systemPause();
             return;
         }
 
@@ -917,14 +909,18 @@ void carregaRanking(){
         printf("\n");
     }
     else{
-        clearScreen();
-        printf("Jogue uma partida antes de ver o ranking\n");
+        printf("\nJogue uma partida antes de ver o ranking\n");
+        systemPause();
         return;
     }	
 
     fclose(rankingFile);
 
+    systemPause();
+}
+
+void systemPause(){
     printf("\nPressione <<enter>> para continuar...\n");
     getchar();
-    clearScreen();
+    system(CLEAR);
 }
