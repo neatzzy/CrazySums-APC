@@ -11,7 +11,7 @@ In this game, players are challenged to solve number-based puzzles by combining 
 - Score tracking
 
 ## Installation
-To compile and run the game, ensure you have a C compiler installed. You can use gcc to compile the code as follows:
+To compile and run the game, ensure you have a C compiler installed. You can use `gcc` to compile the code as follows:
 ```
 gcc -o CrazySums CrazySums.c
 ./CrazySums
